@@ -1,0 +1,1 @@
+# maya_center_point_py_plugin
