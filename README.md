@@ -1,1 +1,1 @@
-# maya_center_point_py_plugin
+# Maya python plugin test example
