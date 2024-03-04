@@ -19,7 +19,7 @@ class CenterPointNode(om.MPxNode):
         numericFn.storable = True
         numericFn.keyable = True
         numericFn.readable = False
-        numericFn.writable  = True
+        numericFn.writable = True
 
         cls.addAttribute(cls.inputObjectsAttr)
         
@@ -45,7 +45,7 @@ class CenterPointNode(om.MPxNode):
         cls.defineAttributes()
 
     def compute(self, plug, dataBlock):
-        if not self.__is_dirty(plug):
+        if not self._is_dirty(plug):
             pass
 
         inputDataHandle = dataBlock.inputArrayValue(CenterPointNode.inputObjectsAttr)
@@ -62,21 +62,22 @@ class CenterPointNode(om.MPxNode):
 
             inputDataHandle.next()
 
-        center_point = self.__find_center_point(positions)
+        center_point = self._find_center_point(positions)
         
         outputHandle = dataBlock.outputValue(self.outputPosAttr)
         outputHandle.set3Double(center_point.x, center_point.y, center_point.z)
         dataBlock.setClean(plug)
 
-    def __is_dirty(self, plug):
+    def _is_dirty(self, plug):
         return plug == self.outputPosAttr
     
-    def __find_center_point(self, positions):
+    def _find_center_point(self, positions):
         sum_vector = om.MVector(0, 0, 0)
         for pos in positions:
             sum_vector += pos
         
         center_point = sum_vector / len(positions)
+        center_point = om.MVector(round(center_point.x, 3), round(center_point.y, 3), round(center_point.z, 3))
 
         return center_point
     
@@ -105,20 +106,22 @@ def uninitializePlugin(plugin):
     except Exception as e:
         om.MGlobal.displayError(f"Failed to de-register node: {CenterPointNode.kTypeName}: {e}")
 
-def __setup_test_scene():
-    centerPointNode = cmds.createNode("centerPoint")
-    
-    sphere1 = cmds.polySphere()[0]
-    sphere2 = cmds.polySphere()[0]
-    sphere3 = cmds.polySphere()[0]
-    sphere4 = cmds.polySphere()[0]
-
-    cmds.connectAttr(f"{sphere1}.worldMatrix[0]", f"{centerPointNode}.input[0]")
-    cmds.connectAttr(f"{sphere2}.worldMatrix[0]", f"{centerPointNode}.input[1]")
-    cmds.connectAttr(f"{sphere3}.worldMatrix[0]", f"{centerPointNode}.input[2]")
-    cmds.connectAttr(f"{centerPointNode}.outputPosition", f"{sphere4}.t")
 
 if __name__ == "__main__":
+
+    def __setup_test_scene():
+        centerPointNode = cmds.createNode("centerPoint")
+        
+        sphere1 = cmds.polySphere()[0]
+        sphere2 = cmds.polySphere()[0]
+        sphere3 = cmds.polySphere()[0]
+        sphere4 = cmds.polySphere()[0]
+
+        cmds.connectAttr(f"{sphere1}.worldMatrix[0]", f"{centerPointNode}.input[0]")
+        cmds.connectAttr(f"{sphere2}.worldMatrix[0]", f"{centerPointNode}.input[1]")
+        cmds.connectAttr(f"{sphere3}.worldMatrix[0]", f"{centerPointNode}.input[2]")
+        cmds.connectAttr(f"{centerPointNode}.outputPosition", f"{sphere4}.t")
+
     plugin_name = "center_point_node.py"
 
     cmds.file(new=True, force=True)
