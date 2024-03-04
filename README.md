@@ -4,6 +4,12 @@
 
 This repository is designed to guide individuals with no or little experience in using pytest and mocks to test Maya Python plugins. The testing framework provided here leverages pytest, a powerful tool for writing and executing tests in Python. This guide assumes that you are working with Maya 2022.5 or superior, but the principles are applicable to other versions with some adjustments.
 
+## Plugin Overview
+
+The plugin featured in this repository is a simple utility designed for Autodesk Maya. It creates a custom Maya node that calculates the center point among a list of object positions. The positions are provided using the world matrix of each object. Although there are alternative methods to achieve this in Maya, the purpose of this plugin is to offer a straightforward example to demonstrate the testing process of Maya Python plugins with pytest and mocks.
+
+This plugin serves as an illustrative example for those learning how to test Maya Python plugins, emphasizing the simplicity and directness of the process rather than the practicality of the plugin itself.
+
 ## Requirements
 
 - **Maya 2022.5**: The tests are created and tested on Maya 2022.5. Compatibility with older versions is not guaranteed.
